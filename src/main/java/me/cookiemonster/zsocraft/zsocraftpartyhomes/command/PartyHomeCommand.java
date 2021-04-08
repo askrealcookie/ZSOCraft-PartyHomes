@@ -8,18 +8,21 @@ import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
 public class PartyHomeCommand implements CommandExecutor {
+
+    //teleport delay in seconds
+    final int TELEPORT_DELAY = ZSOCraftPartyHomes.instance.getConfig().getInt("teleport-delay");
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("partyhome")){
@@ -71,8 +74,35 @@ public class PartyHomeCommand implements CommandExecutor {
                 return false;
             }
 
-            p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
-            p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
+            Location playerLoc = p.getLocation();
+
+            //delay
+
+            if((ZSOCraftPartyHomes.instance.getConfig().getBoolean("enable-admin-delay-bypass") && p.hasPermission("PartyHomes.delay.bypass")) || ZSOCraftPartyHomes.instance.getConfig().getInt("teleport-delay") == 0){
+                p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
+                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
+                return true;
+            }
+
+            new BukkitRunnable(){
+                int delay = TELEPORT_DELAY;
+                public void run(){
+                    if(playerLoc.distance(p.getLocation()) > 0.5d){
+                        p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-move")));
+                        cancel();
+                        return;
+                    }
+                    if(delay <= 0){
+                        p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
+                        p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
+                        cancel();
+                        return;
+                    }
+                    p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-in-progress").replace("%time%", String.valueOf(delay))));
+                    delay--;
+                }
+            }.runTaskTimer(ZSOCraftPartyHomes.instance, 0, 20);
+
             return true;
         }
         return false;
