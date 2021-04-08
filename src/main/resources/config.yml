@@ -33,4 +33,5 @@ messages:
   sethome-successful: '&8%> &aPomyślnie ustawiono dom twojej drużyny!'
   sethome-blacklisted-block: '&8%> &cNie możesz ustawić domu na zabronionym bloku!'
   home-blacklisted-block: '&8%> &cDom twojej drużyny jest ustawiony na zabronionym bloku!'
+  home-teleport-in-block: '&8%> &cDom twojej drużyny jest zablokowany. Upewnij się, że nie ma tam &ożadnych &cbloków!'
   multi-world-teleport: '&8%> &cTeleportowanie się między wymiarami jest wyłączone!'
