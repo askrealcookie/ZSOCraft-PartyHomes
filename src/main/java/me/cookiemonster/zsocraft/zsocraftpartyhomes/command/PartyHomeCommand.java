@@ -2,10 +2,14 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.command;
 
 import com.gmail.nossr50.api.PartyAPI;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,7 +53,7 @@ public class PartyHomeCommand implements CommandExecutor {
                 }
             }
 
-            Location belowLoc = loc.subtract(new Vector(0, 1, 0));
+            Location belowLoc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
             List<String> _blocksBlacklist = ZSOCraftPartyHomes.instance.getConfig().getStringList("blocks-blacklist");
             String[] blocksBlacklist = _blocksBlacklist.toArray(new String[0]);
 
@@ -58,7 +62,16 @@ public class PartyHomeCommand implements CommandExecutor {
                 return false;
             }
 
-            p.teleport(loc.add(new Vector(0, 1, 0)), PlayerTeleportEvent.TeleportCause.COMMAND);
+            Material[] allowedBlocks = { Material.AIR, Material.CAVE_AIR, Material.VOID_AIR, Material.LADDER, Material.SNOW };
+
+            Location blockAtEyePos = loc.getBlock().getRelative(BlockFace.UP).getLocation();
+
+            if(!ArrayUtil.contains(allowedBlocks, loc.getBlock().getType()) || !ArrayUtil.contains(allowedBlocks, blockAtEyePos.getBlock().getType())){
+                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.home-teleport-in-block")));
+                return false;
+            }
+
+            p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
             p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
             return true;
         }
