@@ -4,6 +4,20 @@
 #
 allow-multi-world-teleport: true
 
+# Players will need to wait set amount of time without moving to teleport
+#
+# INTEGER: Accepted values - [ any integer(no point values) ]
+#
+# WARNING: Input value in seconds.
+#          0 to disable teleport delay.
+#
+teleport-delay: 3
+
+# If enabled people with "PartyHomes.delay.bypass" don't need to wait for delay.
+#
+# BOOLEAN: Accepted values - [ true, false ]
+#
+enable-admin-delay-bypass: false
 
 # if player is standing ON(not in!!!) one of this blocks he will not be able to create home here.
 # list of materials: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
@@ -30,6 +44,8 @@ messages:
   you-are-not-leader: '&8%> &cNie jesteś liderem drużyny!'
   no-home-set: '&8%> &cLider nie ustawił domu drużyny!'
   teleport-successful: '&8%> &aTeleportacja udana!'
+  teleport-move: '&8%> &cTeleportacja anulowana! Poruszyłeś się!'
+  teleport-in-progress: '&8%> &7Teleportacja nastąpi za &a%time% sekund&7.'
   sethome-successful: '&8%> &aPomyślnie ustawiono dom twojej drużyny!'
   sethome-blacklisted-block: '&8%> &cNie możesz ustawić domu na zabronionym bloku!'
   home-blacklisted-block: '&8%> &cDom twojej drużyny jest ustawiony na zabronionym bloku!'
