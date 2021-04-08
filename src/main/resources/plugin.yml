@@ -1,0 +1,16 @@
+name: ZSOCraft-PartyHomes
+version: ${project.version}
+main: me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes
+api-version: 1.16
+depend: [ mcMMO ]
+authors: [ CookieMonster ]
+description: Plugin made exclusively for ZSOCraft to allow players to make party-specific homes.
+website: http://www.github.com/askrealcookie
+
+commands:
+  partyhome:
+    description: Teleport to your's party home.
+    aliases: [ phome ]
+  partysethome:
+    description: Set your's party home.
+    aliases: [ psethome ]

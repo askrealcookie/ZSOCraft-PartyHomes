@@ -1,0 +1,36 @@
+# if enabled players will be able to teleport through worlds (e.g. nether <-> overworld)
+#
+# BOOLEAN: Accepted values - [ true, false ]
+#
+allow-multi-world-teleport: true
+
+
+# if player is standing ON(not in!!!) one of this blocks he will not be able to create home here.
+# list of materials: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+#
+# could be useful to avoid trapping newly invited players, e.g. playerA invites playerB and makes his
+# party home at open trap door which leads playerB to death
+#
+blocks-blacklist:
+  - AIR
+  - CAVE_AIR
+  - LADDER
+  - LAVA
+  - WATER
+  - FIRE
+  # - ACACIA_FENCE_GATE
+  # - OAK_TRAPDOOR
+
+# Configure messages here.
+# %> = »
+# %< = «
+#
+messages:
+  not-in-party: '&8%> &cNie jesteś w drużynie!'
+  you-are-not-leader: '&8%> &cNie jesteś liderem drużyny!'
+  no-home-set: '&8%> &cLider nie ustawił domu drużyny!'
+  teleport-successful: '&8%> &aTeleportacja udana!'
+  sethome-successful: '&8%> &aPomyślnie ustawiono dom twojej drużyny!'
+  sethome-blacklisted-block: '&8%> &cNie możesz ustawić domu na zabronionym bloku!'
+  home-blacklisted-block: '&8%> &cDom twojej drużyny jest ustawiony na zabronionym bloku!'
+  multi-world-teleport: '&8%> &cTeleportowanie się między wymiarami jest wyłączone!'
