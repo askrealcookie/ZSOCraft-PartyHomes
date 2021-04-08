@@ -6,6 +6,7 @@ import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,9 +43,10 @@ public class PartySetHomeCommand implements CommandExecutor {
 
             //hacky workaround to avoid pixel perfect tp
             Location loc = p.getLocation().getBlock().getLocation();
+            loc.add(new Vector(0.5, 0, 0.5));
 
             //check if player is standing on safe block
-            Location belowLoc = loc.subtract(new Vector(0, 1, 0));
+            Location belowLoc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
             List<String> _blocksBlacklist = ZSOCraftPartyHomes.instance.getConfig().getStringList("blocks-blacklist");
             String[] blocksBlacklist = _blocksBlacklist.toArray(new String[0]);
 
@@ -52,8 +54,6 @@ public class PartySetHomeCommand implements CommandExecutor {
                 p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.sethome-blacklisted-block")));
                 return false;
             }
-
-            loc.add(new Vector(0.5, 1, 0.5));
 
             DataUtil dataUtil = new DataUtil(p);
             dataUtil.setLocation(playerParty + ".home.location", loc);
