@@ -11,7 +11,7 @@
 
     <name>ZSOCraft PartyHomes</name>
 
-    <description>Plugin made exclusively for ZSOCraft to allow players to mkae party-specific homes.</description>
+    <description>Plugin made exclusively for ZSOCraft to allow players to make party-specific homes.</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
