@@ -2,16 +2,13 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.util;
 
 import com.gmail.nossr50.api.PartyAPI;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class DataUtil {
@@ -19,7 +16,8 @@ public final class DataUtil {
     private FileConfiguration data;
     private File file;
 
-    private Logger log = ZSOCraftPartyHomes.instance.getLogger();
+    private final ZSOCraftPartyHomes instance = ZSOCraftPartyHomes.getInstance();
+    private final Logger log = instance.getLogger();
 
     public DataUtil(Player player){
         if(!PartyAPI.inParty(player)) return;
@@ -36,7 +34,7 @@ public final class DataUtil {
     public boolean exists() { return file.exists(); }
 
     private synchronized void init() {
-        String path = ZSOCraftPartyHomes.instance.getDataFolder() + File.separator + "partydata" + File.separator + party + ".yml";
+        String path = instance.getDataFolder() + File.separator + "partydata" + File.separator + party + ".yml";
         this.file = new File(path);
 
         if(!exists()){
