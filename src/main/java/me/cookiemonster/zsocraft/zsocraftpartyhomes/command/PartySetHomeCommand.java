@@ -10,12 +10,19 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 
 public class PartySetHomeCommand implements CommandExecutor {
+    
+    //instance
+    private final ZSOCraftPartyHomes instance = ZSOCraftPartyHomes.getInstance();
+    //cache config
+    private final FileConfiguration config = instance.getConfig();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("partysethome")){
@@ -27,7 +34,7 @@ public class PartySetHomeCommand implements CommandExecutor {
             //player is not in any party
             boolean isInParty = PartyAPI.inParty(p);
             if(!isInParty){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.not-in-party")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.not-in-party")));
                 return false;
             }
 
@@ -37,7 +44,7 @@ public class PartySetHomeCommand implements CommandExecutor {
             //player is not a leader of party
             boolean isPartyLeader = PartyAPI.getPartyLeader(playerParty).equals(p.getName());
             if(!isPartyLeader){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.you-are-not-leader")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-leader")));
                 return false;
             }
 
@@ -47,17 +54,17 @@ public class PartySetHomeCommand implements CommandExecutor {
 
             //check if player is standing on safe block
             Location belowLoc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-            List<String> _blocksBlacklist = ZSOCraftPartyHomes.instance.getConfig().getStringList("blocks-blacklist");
+            List<String> _blocksBlacklist = config.getStringList("blocks-blacklist");
             String[] blocksBlacklist = _blocksBlacklist.toArray(new String[0]);
 
             if(MaterialUtil.isMaterialBlacklisted(belowLoc.getBlock().getType(), blocksBlacklist)){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.sethome-blacklisted-block")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-blacklisted-block")));
                 return false;
             }
 
             DataUtil dataUtil = new DataUtil(p);
             dataUtil.setLocation(playerParty + ".home.location", loc);
-            p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.sethome-successful")));
+            p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-successful")));
             return true;
         }
         return false;

@@ -12,6 +12,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,9 +21,13 @@ import java.util.List;
 
 public class PartyHomeCommand implements CommandExecutor {
 
+    //instance
+    private final ZSOCraftPartyHomes instance = ZSOCraftPartyHomes.getInstance();
+    //cache config
+    private final FileConfiguration config = instance.getConfig();
     //teleport delay in seconds
-    final int TELEPORT_DELAY = ZSOCraftPartyHomes.instance.getConfig().getInt("teleport-delay");
-
+    final int TELEPORT_DELAY = config.getInt("teleport-delay");
+    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("partyhome")){
@@ -34,7 +39,7 @@ public class PartyHomeCommand implements CommandExecutor {
             //player is not in any party
             boolean isInParty = PartyAPI.inParty(p);
             if(!isInParty){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.not-in-party")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.not-in-party")));
                 return false;
             }
 
@@ -43,25 +48,25 @@ public class PartyHomeCommand implements CommandExecutor {
 
             DataUtil dataUtil = new DataUtil(p);
             if(!dataUtil.hasPath(playerParty + ".home.location")){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.no-home-set")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.no-home-set")));
                 return false;
             }
             Location loc = dataUtil.getLocation(playerParty + ".home.location");
 
-            boolean multiWorldTeleport = ZSOCraftPartyHomes.instance.getConfig().getBoolean("allow-multi-world-teleport");
+            boolean multiWorldTeleport = config.getBoolean("allow-multi-world-teleport");
             if(p.getWorld() != loc.getWorld()){
                 if(!multiWorldTeleport){
-                    p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.multi-world-teleport")));
+                    p.sendMessage(ChatUtil.fixColor(config.getString("messages.multi-world-teleport")));
                     return false;
                 }
             }
 
             Location belowLoc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-            List<String> _blocksBlacklist = ZSOCraftPartyHomes.instance.getConfig().getStringList("blocks-blacklist");
+            List<String> _blocksBlacklist = config.getStringList("blocks-blacklist");
             String[] blocksBlacklist = _blocksBlacklist.toArray(new String[0]);
 
             if(MaterialUtil.isMaterialBlacklisted(belowLoc.getBlock().getType(), blocksBlacklist)){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.home-blacklisted-block")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-blacklisted-block")));
                 return false;
             }
 
@@ -70,7 +75,7 @@ public class PartyHomeCommand implements CommandExecutor {
             Location blockAtEyePos = loc.getBlock().getRelative(BlockFace.UP).getLocation();
 
             if(!ArrayUtil.contains(allowedBlocks, loc.getBlock().getType()) || !ArrayUtil.contains(allowedBlocks, blockAtEyePos.getBlock().getType())){
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.home-teleport-in-block")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-teleport-in-block")));
                 return false;
             }
 
@@ -78,9 +83,9 @@ public class PartyHomeCommand implements CommandExecutor {
 
             //delay
 
-            if((ZSOCraftPartyHomes.instance.getConfig().getBoolean("enable-admin-delay-bypass") && p.hasPermission("PartyHomes.delay.bypass")) || ZSOCraftPartyHomes.instance.getConfig().getInt("teleport-delay") == 0){
+            if((config.getBoolean("enable-admin-delay-bypass") && p.hasPermission("PartyHomes.delay.bypass")) || config.getInt("teleport-delay") == 0){
                 p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
-                p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-successful")));
                 return true;
             }
 
@@ -88,20 +93,20 @@ public class PartyHomeCommand implements CommandExecutor {
                 int delay = TELEPORT_DELAY;
                 public void run(){
                     if(playerLoc.distance(p.getLocation()) > 0.5d){
-                        p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-move")));
+                        p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-move")));
                         cancel();
                         return;
                     }
                     if(delay <= 0){
                         p.teleport(loc, PlayerTeleportEvent.TeleportCause.COMMAND);
-                        p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-successful")));
+                        p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-successful")));
                         cancel();
                         return;
                     }
-                    p.sendMessage(ChatUtil.fixColor(ZSOCraftPartyHomes.instance.getConfig().getString("messages.teleport-in-progress").replace("%time%", String.valueOf(delay))));
+                    p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-in-progress").replace("%time%", String.valueOf(delay))));
                     delay--;
                 }
-            }.runTaskTimer(ZSOCraftPartyHomes.instance, 0, 20);
+            }.runTaskTimer(ZSOCraftPartyHomes.getInstance(), 0, 20);
 
             return true;
         }
