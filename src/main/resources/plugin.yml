@@ -2,7 +2,7 @@ name: ZSOCraft-PartyHomes
 version: ${project.version}
 main: me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes
 api-version: 1.16
-depend: [ mcMMO ]
+depend: [ mcMMO, GriefPrevention ]
 authors: [ CookieMonster ]
 description: Plugin made exclusively for ZSOCraft to allow players to make party-specific homes.
 website: http://www.github.com/askrealcookie
