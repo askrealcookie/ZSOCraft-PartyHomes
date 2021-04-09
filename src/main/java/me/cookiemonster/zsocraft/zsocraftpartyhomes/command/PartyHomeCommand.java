@@ -101,6 +101,7 @@ public class PartyHomeCommand implements CommandExecutor {
 
             //delay for sad bois without perms
             playersInTeleportState.add(uuid);
+            p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-in-progress").replace("%time%", String.valueOf(TELEPORT_DELAY))));
             new BukkitRunnable(){
                 int delay = TELEPORT_DELAY;
                 public void run(){
@@ -124,7 +125,7 @@ public class PartyHomeCommand implements CommandExecutor {
                         cancel();
                         return;
                     }
-                    p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-in-progress").replace("%time%", String.valueOf(delay))));
+                    //p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-in-progress").replace("%time%", String.valueOf(delay))));
                     delay--;
                 }
             }.runTaskTimer(ZSOCraftPartyHomes.getInstance(), 0, 20);
