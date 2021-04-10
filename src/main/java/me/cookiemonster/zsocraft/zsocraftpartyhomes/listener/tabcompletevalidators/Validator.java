@@ -1,4 +1,4 @@
-package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators;
+package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators;
 
 import org.bukkit.entity.Player;
 

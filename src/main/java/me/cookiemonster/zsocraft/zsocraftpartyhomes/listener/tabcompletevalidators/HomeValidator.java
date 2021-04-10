@@ -1,4 +1,4 @@
-package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators;
+package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators;
 
 import com.gmail.nossr50.datatypes.party.Party;
 import com.gmail.nossr50.party.PartyManager;

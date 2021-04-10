@@ -1,13 +1,12 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener;
 
-import com.gmail.nossr50.datatypes.party.Party;
-import com.gmail.nossr50.party.PartyManager;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators.HomeValidator;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators.Validator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.DelhomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.HomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.SethomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.Validator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
@@ -18,10 +17,14 @@ public class TabCompleteListener implements Listener {
 
     private final HashMap<String, Validator> commands_validators = new HashMap<>();
 
+    public TabCompleteListener(){
+        commands_validators.put("home", new HomeValidator());
+        commands_validators.put("sethome", new SethomeValidator());
+        commands_validators.put("delhome", new DelhomeValidator());
+    }
+
     @EventHandler
     public void onTabComplete(TabCompleteEvent e){
-
-        commands_validators.put("home", new HomeValidator());
 
         if(e.getSender() instanceof ConsoleCommandSender) return;
         Player p = (Player) e.getSender();
@@ -43,7 +46,19 @@ public class TabCompleteListener implements Listener {
         for(Map.Entry<String, Validator> entry : commands_validators.entrySet()){
             Validator validator = entry.getValue();
             String command = entry.getKey();
-            if(validator.isValid(p) && command.startsWith(args[1])) completions.add(command);
+            String playerCommandArgument;
+
+            if(!validator.isValid(p)) continue;
+
+            if(args.length == 1) {
+                completions.add(command);
+            }
+            else if(args.length == 2) {
+                playerCommandArgument = args[1];
+
+                if (command.startsWith(playerCommandArgument) && !command.equals(playerCommandArgument))
+                    completions.add(command);
+            }
         }
 
         setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
