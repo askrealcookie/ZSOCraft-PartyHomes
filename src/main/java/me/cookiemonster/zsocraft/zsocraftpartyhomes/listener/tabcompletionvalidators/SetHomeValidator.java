@@ -3,7 +3,7 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalid
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.PartyUtil;
 import org.bukkit.entity.Player;
 
-public class DelhomeValidator implements Validator{
+public class SetHomeValidator implements Validator{
     @Override
     public boolean isValid(Player p) {
         return PartyUtil.isPartyLeader(p);

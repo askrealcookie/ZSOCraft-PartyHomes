@@ -1,8 +1,8 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener;
 
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.DelhomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.DelHomeValidator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.HomeValidator;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.SethomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.SetHomeValidator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.Validator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
@@ -15,12 +15,12 @@ import java.util.*;
 
 public class TabCompleteListener implements Listener {
 
-    private final HashMap<String, Validator> commands_validators = new HashMap<>();
+    private final HashMap<String, Validator> commandsValidators = new HashMap<>();
 
     public TabCompleteListener(){
-        commands_validators.put("home", new HomeValidator());
-        commands_validators.put("sethome", new SethomeValidator());
-        commands_validators.put("delhome", new DelhomeValidator());
+        commandsValidators.put("home", new HomeValidator());
+        commandsValidators.put("sethome", new SetHomeValidator());
+        commandsValidators.put("delhome", new DelHomeValidator());
     }
 
     @EventHandler
@@ -43,7 +43,7 @@ public class TabCompleteListener implements Listener {
 
         List<String> completions = new ArrayList<>(e.getCompletions());
 
-        for(Map.Entry<String, Validator> entry : commands_validators.entrySet()){
+        for(Map.Entry<String, Validator> entry : commandsValidators.entrySet()){
             Validator validator = entry.getValue();
             String command = entry.getKey();
             String playerCommandArgument;
