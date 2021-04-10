@@ -52,3 +52,5 @@ messages:
   home-teleport-in-block: '&8%> &cDom twojej drużyny jest zablokowany. Upewnij się, że nie ma tam &ożadnych &cbloków!'
   multi-world-teleport: '&8%> &cTeleportowanie się między wymiarami jest wyłączone!'
   you-are-not-in-your-claim: '&8%> &cMusisz być na swojej działce, aby ustawić dom drużyny!'
+  home-is-not-claim-of-leader: '&8%> &cW miejscu domu drużyny jest inna działka(lub jej brak). Poproś lidera o stworzenie nowej działki i ustawienie domu drużyny.'
+  leader-has-changed: '&8%> &cLider zmienił się od ostatniego czasu! Proszę ustawić nowy dom drużyny.'
