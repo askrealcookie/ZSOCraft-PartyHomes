@@ -48,7 +48,7 @@ public class PartySetHomeCommand implements CommandExecutor {
             UUID leader = playerParty.getLeader().getUniqueId();
 
             //player is not a leader of party
-            boolean isPartyLeader = p.getUniqueId() == leader;
+            boolean isPartyLeader = p.getUniqueId().equals(leader);
             if(!isPartyLeader){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-leader")));
                 return false;
