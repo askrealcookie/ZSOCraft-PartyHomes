@@ -1,7 +1,9 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener;
 
-import com.gmail.nossr50.datatypes.party.Party;
-import com.gmail.nossr50.party.PartyManager;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.DelHomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.HomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.SetHomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.Validator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -9,12 +11,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TabCompleteListener implements Listener {
+
+    private final HashMap<String, Validator> commandsValidators = new HashMap<>();
+
+    public TabCompleteListener(){
+        commandsValidators.put("home", new HomeValidator());
+        commandsValidators.put("sethome", new SetHomeValidator());
+        commandsValidators.put("delhome", new DelHomeValidator());
+    }
+
     @EventHandler
     public void onTabComplete(TabCompleteEvent e){
+
         if(e.getSender() instanceof ConsoleCommandSender) return;
         Player p = (Player) e.getSender();
         String buffer = e.getBuffer();
@@ -30,27 +41,32 @@ public class TabCompleteListener implements Listener {
 
         if(!cmd.equalsIgnoreCase("party")) return;
 
-        Party party = PartyManager.getParty(p);
-
         List<String> completions = new ArrayList<>(e.getCompletions());
-        //spaghetto time
-        if(args.length == 2) {
-            if ((args[1].toLowerCase().startsWith("h") || args[1].toLowerCase().startsWith("ho") || args[1].toLowerCase().startsWith("hom")) && (!args[1].toLowerCase().startsWith("home")))
-                completions.add("home");
-            if(party.getLeader().getUniqueId().equals(p.getUniqueId())) {
-                if ((args[1].toLowerCase().startsWith("s") || args[1].toLowerCase().startsWith("se") || args[1].toLowerCase().startsWith("set") || args[1].toLowerCase().startsWith("seth") || args[1].toLowerCase().startsWith("setho") || args[1].toLowerCase().startsWith("sethom")) && (!args[1].toLowerCase().startsWith("sethome")))
-                    completions.add("sethome");
-                if ((args[1].toLowerCase().startsWith("d") || args[1].toLowerCase().startsWith("de") || args[1].toLowerCase().startsWith("del") || args[1].toLowerCase().startsWith("delh") || args[1].toLowerCase().startsWith("delho") || args[1].toLowerCase().startsWith("delhom")) && (!args[1].toLowerCase().startsWith("delhome")))
-                    completions.add("delhome");
+
+        for(Map.Entry<String, Validator> entry : commandsValidators.entrySet()){
+            Validator validator = entry.getValue();
+            String command = entry.getKey();
+            String playerCommandArgument;
+
+            if(!validator.isValid(p)) continue;
+
+            if(args.length == 1) {
+                completions.add(command);
             }
-        } else if (args.length == 1){
-            completions.add("home");
-            if(party.getLeader().getUniqueId().equals(p.getUniqueId())) {
-                completions.add("sethome");
-                completions.add("delhome");
+            else if(args.length == 2) {
+                playerCommandArgument = args[1];
+
+                if (command.startsWith(playerCommandArgument) && !command.equals(playerCommandArgument))
+                    completions.add(command);
             }
         }
+
+        setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
+    }
+
+    private void setCompletionsToLowerCaseOnTabCompleteEvent(TabCompleteEvent e, List<String> completions){
         ArrayUtil.replaceToLowerCase(completions);
         e.setCompletions(completions);
     }
+
 }
