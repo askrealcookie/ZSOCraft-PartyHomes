@@ -3,8 +3,12 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.command;
 import com.gmail.nossr50.api.PartyAPI;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ClaimsUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -45,6 +49,11 @@ public class PartySetHomeCommand implements CommandExecutor {
             boolean isPartyLeader = PartyAPI.getPartyLeader(playerParty).equals(p.getName());
             if(!isPartyLeader){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-leader")));
+                return false;
+            }
+
+            if(!ClaimsUtil.isPlayerInHisClaim(p)){
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-in-your-claim")));
                 return false;
             }
 
