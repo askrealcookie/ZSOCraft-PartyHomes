@@ -4,15 +4,16 @@ import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class ClaimsUtil {
-    public static boolean isPlayerInHisClaim(Player p) {
-        PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(p.getUniqueId());
-        Location playerLocation = p.getLocation();
+    //changing isPlayerInHis claim to doesClaimBelongsToUUID will enable to check offline players for any location in the world.
+    public static boolean doesClaimBelongsToUUID(UUID uuid, Location loc) {
+        PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(uuid);
 
         for (Claim claim : playerData.getClaims()) {
-            if(claim.isNear(playerLocation, 0)) return true;
+            if(claim.isNear(loc, 0)) return true;
         }
         return false;
     }
