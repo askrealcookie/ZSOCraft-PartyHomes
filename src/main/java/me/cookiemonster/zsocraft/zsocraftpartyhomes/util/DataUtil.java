@@ -1,6 +1,7 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.util;
 
 import com.gmail.nossr50.api.PartyAPI;
+import com.gmail.nossr50.party.PartyManager;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +22,7 @@ public final class DataUtil {
 
     public DataUtil(Player player){
         if(!PartyAPI.inParty(player)) return;
-        this.party = PartyAPI.getPartyName(player);
+        this.party = PartyManager.getParty(player).getName();
         init();
     }
 
@@ -57,6 +58,7 @@ public final class DataUtil {
 
         // home location shouldn't be set by default.
         data.set(party + ".leaderName", getLeaderName());
+        data.set(party + ".leaderUUID", PartyManager.getParty(getParty()).getLeader().getUniqueId().toString());
         save();
     }
 

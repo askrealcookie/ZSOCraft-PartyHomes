@@ -1,6 +1,8 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.command;
 
 import com.gmail.nossr50.api.PartyAPI;
+import com.gmail.nossr50.datatypes.party.Party;
+import com.gmail.nossr50.party.PartyManager;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ClaimsUtil;
@@ -19,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PartySetHomeCommand implements CommandExecutor {
     
@@ -43,16 +46,19 @@ public class PartySetHomeCommand implements CommandExecutor {
             }
 
             //get player party
-            String playerParty = PartyAPI.getPartyName(p);
+            Party playerParty = PartyManager.getParty(p);
+            //get leader
+            UUID leader = playerParty.getLeader().getUniqueId();
 
             //player is not a leader of party
-            boolean isPartyLeader = PartyAPI.getPartyLeader(playerParty).equals(p.getName());
+            boolean isPartyLeader = p.getUniqueId() == leader;
             if(!isPartyLeader){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-leader")));
                 return false;
             }
 
-            if(!ClaimsUtil.isPlayerInHisClaim(p)){
+            //player is not in his claim
+            if(!ClaimsUtil.doesClaimBelongsToUUID(p.getUniqueId(), p.getLocation())){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-in-your-claim")));
                 return false;
             }
@@ -72,7 +78,7 @@ public class PartySetHomeCommand implements CommandExecutor {
             }
 
             DataUtil dataUtil = new DataUtil(p);
-            dataUtil.setLocation(playerParty + ".home.location", loc);
+            dataUtil.setLocation(playerParty.getName() + ".home.location", loc);
             p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-successful")));
             return true;
         }

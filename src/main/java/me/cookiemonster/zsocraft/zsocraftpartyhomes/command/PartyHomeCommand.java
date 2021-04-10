@@ -1,12 +1,10 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.command;
 
 import com.gmail.nossr50.api.PartyAPI;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.gmail.nossr50.datatypes.party.Party;
+import com.gmail.nossr50.party.PartyManager;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -51,14 +49,16 @@ public class PartyHomeCommand implements CommandExecutor {
             }
 
             //get player party
-            String playerParty = PartyAPI.getPartyName(p);
+            Party playerParty = PartyManager.getParty(p);
+            //get leader
+            UUID leader = playerParty.getLeader().getUniqueId();
 
             DataUtil dataUtil = new DataUtil(p);
-            if(!dataUtil.hasPath(playerParty + ".home.location")){
+            if(!dataUtil.hasPath(playerParty.getName() + ".home.location")){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.no-home-set")));
                 return false;
             }
-            Location loc = dataUtil.getLocation(playerParty + ".home.location");
+            Location loc = dataUtil.getLocation(playerParty.getName() + ".home.location");
 
             boolean multiWorldTeleport = config.getBoolean("allow-multi-world-teleport");
             if(p.getWorld() != loc.getWorld()){
@@ -66,6 +66,15 @@ public class PartyHomeCommand implements CommandExecutor {
                     p.sendMessage(ChatUtil.fixColor(config.getString("messages.multi-world-teleport")));
                     return false;
                 }
+            }
+
+            if(leader != p.getUniqueId()){
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.leader-has-changed")));
+                return false;
+            }
+            if(!ClaimsUtil.doesClaimBelongsToUUID(leader, loc)){
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-is-not-claim-of-leader")));
+                return false;
             }
 
             Location belowLoc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
@@ -112,9 +121,15 @@ public class PartyHomeCommand implements CommandExecutor {
                         return;
                     }
                     if(delay <= 0){
-                        //additional check, I may be paranoic, but someone could place blocks as soon someone types command
+                        //additional checks, I may be paranoic, but someone could place blocks or change home location as soon someone types command
                         if(!ArrayUtil.contains(allowedBlocks, loc.getBlock().getType()) || !ArrayUtil.contains(allowedBlocks, blockAtEyePos.getBlock().getType())){
                             p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-teleport-in-block")));
+                            playersInTeleportState.remove(uuid);
+                            cancel();
+                            return;
+                        }
+                        if(!ClaimsUtil.doesClaimBelongsToUUID(leader, loc)){
+                            p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-is-not-claim-of-leader")));
                             playersInTeleportState.remove(uuid);
                             cancel();
                             return;
