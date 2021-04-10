@@ -13,7 +13,7 @@ allow-multi-world-teleport: true
 #
 teleport-delay: 3
 
-# If enabled people with "PartyHomes.delay.bypass" don't need to wait for delay.
+# If enabled people with "PartyHomes.delay.bypass" permission don't need to wait for delay.
 #
 # BOOLEAN: Accepted values - [ true, false ]
 #
