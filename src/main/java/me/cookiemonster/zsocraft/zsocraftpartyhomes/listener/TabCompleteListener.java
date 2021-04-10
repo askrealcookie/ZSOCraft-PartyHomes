@@ -35,9 +35,12 @@ public class TabCompleteListener implements Listener {
                 completions.add("home");
             if ((args[1].toLowerCase().startsWith("s") || args[1].toLowerCase().startsWith("se") || args[1].toLowerCase().startsWith("set") || args[1].toLowerCase().startsWith("seth") || args[1].toLowerCase().startsWith("setho") || args[1].toLowerCase().startsWith("sethom")) && (!args[1].toLowerCase().startsWith("sethome")))
                 completions.add("sethome");
+            if ((args[1].toLowerCase().startsWith("d") || args[1].toLowerCase().startsWith("de") || args[1].toLowerCase().startsWith("del") || args[1].toLowerCase().startsWith("delh") || args[1].toLowerCase().startsWith("delho") || args[1].toLowerCase().startsWith("delhom")) && (!args[1].toLowerCase().startsWith("delhome")))
+                completions.add("delhome");
         } else if (args.length == 1){
             completions.add("home");
             completions.add("sethome");
+            completions.add("delhome");
         }
         ArrayUtil.replaceToLowerCase(completions);
         e.setCompletions(completions);

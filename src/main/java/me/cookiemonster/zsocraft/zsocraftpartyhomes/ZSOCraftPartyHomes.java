@@ -1,5 +1,6 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes;
 
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.command.PartyDelHomeCommand;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.command.PartyHomeCommand;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.command.PartySetHomeCommand;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.PlayerCommandPreprocessListener;
@@ -27,6 +28,7 @@ public final class ZSOCraftPartyHomes extends JavaPlugin {
     private void RegisterCommands() {
         getCommand("partyhome").setExecutor(new PartyHomeCommand());
         getCommand("partysethome").setExecutor(new PartySetHomeCommand());
+        getCommand("partydelhome").setExecutor(new PartyDelHomeCommand());
     }
 
     private void RegisterEvents() {

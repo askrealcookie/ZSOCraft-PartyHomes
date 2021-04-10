@@ -54,3 +54,4 @@ messages:
   you-are-not-in-your-claim: '&8%> &cMusisz być na swojej działce, aby ustawić dom drużyny!'
   home-is-not-claim-of-leader: '&8%> &cW miejscu domu drużyny jest inna działka(lub jej brak). Poproś lidera o stworzenie nowej działki i ustawienie domu drużyny.'
   leader-has-changed: '&8%> &cLider zmienił się od ostatniego czasu! Proszę ustawić nowy dom drużyny.'
+  home-deleted-successful: '&8%> &aDom drużyny usunięty pomyślnie!'

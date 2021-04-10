@@ -21,6 +21,10 @@ public class PlayerCommandPreprocessListener implements Listener {
                 p.performCommand("partyhome");
                 e.setCancelled(true);
             }
+            if(args[1].equalsIgnoreCase("delhome")){
+                p.performCommand("partydelhome");
+                e.setCancelled(true);
+            }
         }
     }
 }
