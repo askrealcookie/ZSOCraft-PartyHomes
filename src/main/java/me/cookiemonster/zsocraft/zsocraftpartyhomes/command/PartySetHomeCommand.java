@@ -5,6 +5,9 @@ import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -48,6 +51,11 @@ public class PartySetHomeCommand implements CommandExecutor {
                 return false;
             }
 
+            if(!isPlayerInHisClaim(p)){
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-in-your-claim")));
+                return false;
+            }
+
             //hacky workaround to avoid pixel perfect tp
             Location loc = p.getLocation().getBlock().getLocation();
             loc.add(new Vector(0.5, 0, 0.5));
@@ -66,6 +74,16 @@ public class PartySetHomeCommand implements CommandExecutor {
             dataUtil.setLocation(playerParty + ".home.location", loc);
             p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-successful")));
             return true;
+        }
+        return false;
+    }
+
+    private boolean isPlayerInHisClaim(Player p) {
+        PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(p.getUniqueId());
+        Location playerLocation = p.getLocation();
+
+        for (Claim claim : playerData.getClaims()) {
+            if(claim.isNear(playerLocation, 0)) return true;
         }
         return false;
     }
