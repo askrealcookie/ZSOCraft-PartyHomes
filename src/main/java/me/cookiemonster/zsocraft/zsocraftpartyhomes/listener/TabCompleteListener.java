@@ -5,12 +5,14 @@ import com.gmail.nossr50.party.PartyManager;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TabCompleteListener implements Listener {
     @EventHandler
@@ -34,6 +36,11 @@ public class TabCompleteListener implements Listener {
 
         List<String> completions = new ArrayList<>(e.getCompletions());
         //spaghetto time
+        if(Objects.isNull(party)){
+            setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
+            return;
+        }
+
         if(args.length == 2) {
             if ((args[1].toLowerCase().startsWith("h") || args[1].toLowerCase().startsWith("ho") || args[1].toLowerCase().startsWith("hom")) && (!args[1].toLowerCase().startsWith("home")))
                 completions.add("home");
@@ -50,7 +57,12 @@ public class TabCompleteListener implements Listener {
                 completions.add("delhome");
             }
         }
+        setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
+    }
+
+    private void setCompletionsToLowerCaseOnTabCompleteEvent(TabCompleteEvent e, List<String> completions){
         ArrayUtil.replaceToLowerCase(completions);
         e.setCompletions(completions);
     }
+
 }
