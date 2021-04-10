@@ -3,6 +3,7 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.command;
 import com.gmail.nossr50.api.PartyAPI;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.ZSOCraftPartyHomes;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ChatUtil;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ClaimsUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.DataUtil;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.MaterialUtil;
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -51,7 +52,7 @@ public class PartySetHomeCommand implements CommandExecutor {
                 return false;
             }
 
-            if(!isPlayerInHisClaim(p)){
+            if(!ClaimsUtil.isPlayerInHisClaim(p)){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-in-your-claim")));
                 return false;
             }
@@ -74,16 +75,6 @@ public class PartySetHomeCommand implements CommandExecutor {
             dataUtil.setLocation(playerParty + ".home.location", loc);
             p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-successful")));
             return true;
-        }
-        return false;
-    }
-
-    private boolean isPlayerInHisClaim(Player p) {
-        PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(p.getUniqueId());
-        Location playerLocation = p.getLocation();
-
-        for (Claim claim : playerData.getClaims()) {
-            if(claim.isNear(playerLocation, 0)) return true;
         }
         return false;
     }
