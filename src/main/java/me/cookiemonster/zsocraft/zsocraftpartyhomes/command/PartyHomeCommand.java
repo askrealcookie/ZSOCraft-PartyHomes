@@ -68,7 +68,7 @@ public class PartyHomeCommand implements CommandExecutor {
                 }
             }
 
-            if(leader != p.getUniqueId()){
+            if(!dataUtil.getSavedLeader().equals(playerParty.getLeader().getUniqueId())){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.leader-has-changed")));
                 return false;
             }

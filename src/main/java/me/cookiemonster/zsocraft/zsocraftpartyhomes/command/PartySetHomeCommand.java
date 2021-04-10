@@ -75,6 +75,7 @@ public class PartySetHomeCommand implements CommandExecutor {
             }
 
             DataUtil dataUtil = new DataUtil(p);
+            dataUtil.setNewLeader(p);
             dataUtil.setLocation(playerParty.getName() + ".home.location", loc);
             p.sendMessage(ChatUtil.fixColor(config.getString("messages.sethome-successful")));
             return true;

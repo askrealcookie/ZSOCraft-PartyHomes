@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class DataUtil {
@@ -76,5 +77,15 @@ public final class DataUtil {
     public void setLocation(String path, Location loc) {
         data.set(path, loc);
         save();
+    }
+    public UUID getSavedLeader() { if(!hasPath(party + ".leaderUUID")) return null; return UUID.fromString(data.getString(party + ".leaderUUID")); }
+    public void setNewLeader(Player newLeader) {
+        if(newLeader == null){
+            data.set(party + ".leaderName", null);
+            data.set(party + ".leaderUUID", null);
+            return;
+        }
+        data.set(party + ".leaderName", newLeader.getName());
+        data.set(party + ".leaderUUID", newLeader.getUniqueId().toString());
     }
 }

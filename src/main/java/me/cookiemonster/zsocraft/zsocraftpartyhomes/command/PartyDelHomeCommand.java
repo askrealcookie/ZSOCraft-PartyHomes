@@ -43,12 +43,20 @@ public class PartyDelHomeCommand implements CommandExecutor {
             //get leader
             UUID leader = playerParty.getLeader().getUniqueId();
 
+            //player is not a leader of party
+            boolean isPartyLeader = p.getUniqueId() == leader;
+            if(!isPartyLeader){
+                p.sendMessage(ChatUtil.fixColor(config.getString("messages.you-are-not-leader")));
+                return false;
+            }
+
             DataUtil dataUtil = new DataUtil(p);
             if(!dataUtil.hasPath(playerParty.getName() + ".home.location")){
                 p.sendMessage(ChatUtil.fixColor(config.getString("messages.no-home-set")));
                 return false;
             }
 
+            dataUtil.setNewLeader(null);
             dataUtil.setLocation(playerParty.getName() + ".home.location", null);
             p.sendMessage(ChatUtil.fixColor(config.getString("messages.home-deleted-successful")));
 
