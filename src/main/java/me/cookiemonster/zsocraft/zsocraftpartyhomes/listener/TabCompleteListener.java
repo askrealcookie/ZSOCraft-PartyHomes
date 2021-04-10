@@ -29,9 +29,17 @@ public class TabCompleteListener implements Listener {
         if(!cmd.equalsIgnoreCase("party")) return;
 
         List<String> completions = new ArrayList<>(e.getCompletions());
+        //spaghetto time
+        if(args.length == 2) {
+            if ((args[1].toLowerCase().startsWith("h") || args[1].toLowerCase().startsWith("ho") || args[1].toLowerCase().startsWith("hom")) && (!args[1].toLowerCase().startsWith("home")))
+                completions.add("home");
+            if ((args[1].toLowerCase().startsWith("s") || args[1].toLowerCase().startsWith("se") || args[1].toLowerCase().startsWith("set") || args[1].toLowerCase().startsWith("seth") || args[1].toLowerCase().startsWith("setho") || args[1].toLowerCase().startsWith("sethom")) && (!args[1].toLowerCase().startsWith("sethome")))
+                completions.add("sethome");
+        } else if (args.length == 1){
+            completions.add("home");
+            completions.add("sethome");
+        }
         ArrayUtil.replaceToLowerCase(completions);
-        completions.add("home");
-        completions.add("sethome");
         e.setCompletions(completions);
     }
 }
