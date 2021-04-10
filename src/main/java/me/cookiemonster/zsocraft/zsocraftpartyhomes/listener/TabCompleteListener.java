@@ -1,9 +1,9 @@
 package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener;
 
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.DelhomeValidator;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.HomeValidator;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.SethomeValidator;
-import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletevalidators.Validator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.DelhomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.HomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.SethomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabcompletionvalidators.Validator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
