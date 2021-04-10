@@ -2,6 +2,8 @@ package me.cookiemonster.zsocraft.zsocraftpartyhomes.listener;
 
 import com.gmail.nossr50.datatypes.party.Party;
 import com.gmail.nossr50.party.PartyManager;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators.HomeValidator;
+import me.cookiemonster.zsocraft.zsocraftpartyhomes.listener.tabCompleteValidators.Validator;
 import me.cookiemonster.zsocraft.zsocraftpartyhomes.util.ArrayUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -10,13 +12,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class TabCompleteListener implements Listener {
+
+    private final HashMap<String, Validator> commands_validators = new HashMap<>();
+
     @EventHandler
     public void onTabComplete(TabCompleteEvent e){
+
+        commands_validators.put("home", new HomeValidator());
+
         if(e.getSender() instanceof ConsoleCommandSender) return;
         Player p = (Player) e.getSender();
         String buffer = e.getBuffer();
@@ -32,31 +38,14 @@ public class TabCompleteListener implements Listener {
 
         if(!cmd.equalsIgnoreCase("party")) return;
 
-        Party party = PartyManager.getParty(p);
-
         List<String> completions = new ArrayList<>(e.getCompletions());
-        //spaghetto time
-        if(Objects.isNull(party)){
-            setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
-            return;
+
+        for(Map.Entry<String, Validator> entry : commands_validators.entrySet()){
+            Validator validator = entry.getValue();
+            String command = entry.getKey();
+            if(validator.isValid(p) && command.startsWith(args[1])) completions.add(command);
         }
 
-        if(args.length == 2) {
-            if ((args[1].toLowerCase().startsWith("h") || args[1].toLowerCase().startsWith("ho") || args[1].toLowerCase().startsWith("hom")) && (!args[1].toLowerCase().startsWith("home")))
-                completions.add("home");
-            if(party.getLeader().getUniqueId().equals(p.getUniqueId())) {
-                if ((args[1].toLowerCase().startsWith("s") || args[1].toLowerCase().startsWith("se") || args[1].toLowerCase().startsWith("set") || args[1].toLowerCase().startsWith("seth") || args[1].toLowerCase().startsWith("setho") || args[1].toLowerCase().startsWith("sethom")) && (!args[1].toLowerCase().startsWith("sethome")))
-                    completions.add("sethome");
-                if ((args[1].toLowerCase().startsWith("d") || args[1].toLowerCase().startsWith("de") || args[1].toLowerCase().startsWith("del") || args[1].toLowerCase().startsWith("delh") || args[1].toLowerCase().startsWith("delho") || args[1].toLowerCase().startsWith("delhom")) && (!args[1].toLowerCase().startsWith("delhome")))
-                    completions.add("delhome");
-            }
-        } else if (args.length == 1){
-            completions.add("home");
-            if(party.getLeader().getUniqueId().equals(p.getUniqueId())) {
-                completions.add("sethome");
-                completions.add("delhome");
-            }
-        }
         setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
     }
 
