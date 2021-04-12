@@ -10,8 +10,9 @@ public class PlayerCommandPreprocessListener implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
         String[] args = e.getMessage().split(" ");
         String cmd = args[0];
-
         if(cmd.equalsIgnoreCase("/party")){
+            //fixes #6
+            if(args.length < 2) return;
             Player p = e.getPlayer();
             if(args[1].equalsIgnoreCase("sethome")){
                 p.performCommand("partysethome");
