@@ -114,6 +114,12 @@ public class PartyHomeCommand implements CommandExecutor {
             new BukkitRunnable(){
                 int delay = TELEPORT_DELAY;
                 public void run(){
+                    //fixes #7
+                    if(playerLoc.getWorld() != p.getWorld()){
+                        playersInTeleportState.remove(uuid);
+                        cancel();
+                        return;
+                    }
                     if(playerLoc.distance(p.getLocation()) > 0.5d){
                         p.sendMessage(ChatUtil.fixColor(config.getString("messages.teleport-move")));
                         playersInTeleportState.remove(uuid);
