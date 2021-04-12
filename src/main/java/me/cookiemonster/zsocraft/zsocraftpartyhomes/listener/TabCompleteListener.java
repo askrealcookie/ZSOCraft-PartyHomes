@@ -61,6 +61,7 @@ public class TabCompleteListener implements Listener {
             }
         }
 
+        //to do: only set it to lowercase in argument 1(arg 0 is command), because it also makes player names lowercase
         setCompletionsToLowerCaseOnTabCompleteEvent(e, completions);
     }
 
